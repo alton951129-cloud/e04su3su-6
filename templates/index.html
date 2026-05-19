@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>運彩分析大師 - 用數據看透機率</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <span class="highlight">運彩</span>分析大師
+        </div>
+        <ul class="nav-links">
+            <li><a href="#home">首頁</a></li>
+            <li><a href="#features">功能預覽</a></li>
+            <li><a href="#about">關於我們</a></li>
+        </ul>
+        <div class="nav-actions">
+            <button class="btn btn-outline" id="loginBtn">登入 / 註冊</button>
+        </div>
+    </nav>
+
+    <header class="hero" id="home">
+        <div class="hero-content">
+            <h1>用數據看透機率<br>掌握<span class="highlight-text">中獎密碼</span></h1>
+            <p class="hero-subtitle">不再依賴直覺，透過獨家演算法與歷屆數據統計，為您找出最高機率的黃金組合。合法、理智的投資理財好幫手。</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary" id="startBtn">立即開始分析</button>
+                <button class="btn btn-secondary">了解運作原理</button>
+            </div>
+        </div>
+        <div class="hero-graphic">
+            <div class="glow-orb"></div>
+            <div class="glass-card main-stats">
+                <div class="stat-row">
+                    <span>大樂透</span>
+                    <span class="success">87% 準確率</span>
+                </div>
+                <div class="stat-row">
+                    <span>威力彩</span>
+                    <span class="success">82% 準確率</span>
+                </div>
+                <div class="stat-row">
+                    <span>今彩539</span>
+                    <span class="success">91% 準確率</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="features" id="features">
+        <h2 class="section-title">核心功能</h2>
+        <div class="features-grid">
+            <div class="feature-card glass-card">
+                <div class="icon-wrapper">📊</div>
+                <h3>統計過往號碼</h3>
+                <p>獨家爬蟲系統自動抓取歷屆開獎結果，透過大數據分析找出熱門冷門號碼趨勢。</p>
+                <span class="tag">F-01</span>
+            </div>
+            <div class="feature-card glass-card">
+                <div class="icon-wrapper">🧠</div>
+                <h3>智能預測結果</h3>
+                <p>結合統計學與機率模型，為您生成最有可能的中獎數字組合，提升中獎機率。</p>
+                <span class="tag">F-02</span>
+            </div>
+            <div class="feature-card glass-card">
+                <div class="icon-wrapper">🎯</div>
+                <h3>多種運彩選擇</h3>
+                <p>支援大樂透、威力彩、今彩539等中華民國合法公益彩券，隨心切換分析模式。</p>
+                <span class="tag">F-03</span>
+            </div>
+            <div class="feature-card glass-card">
+                <div class="icon-wrapper">💰</div>
+                <h3>盈虧記帳追蹤</h3>
+                <p>詳細記錄每一筆花費與中獎金額，視覺化圖表讓您清楚掌握投資績效，避免過度沉迷。</p>
+                <span class="tag">F-04 / F-05</span>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 運彩分析大師 - 超級瑪莉小組. All Rights Reserved. (投資理財有賺有賠，投資前情詳閱公開說明書)</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
