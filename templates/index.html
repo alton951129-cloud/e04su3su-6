@@ -6,6 +6,8 @@
     <title>運彩分析大師 - 用數據看透機率</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- 引入 Chart.js 用於數據統計圖表 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <nav class="navbar">
@@ -76,6 +78,127 @@
                 <h3>盈虧記帳追蹤</h3>
                 <p>詳細記錄每一筆花費與中獎金額，視覺化圖表讓您清楚掌握投資績效，避免過度沉迷。</p>
                 <span class="tag">F-04 / F-05</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- F-01/F-03 數據統計分析中心 -->
+    <section class="analysis-center" id="analysis">
+        <h2 class="section-title">📊 數據統計分析中心</h2>
+        
+        <!-- 彩券類型選擇器 (F-03) -->
+        <div class="game-selector-container">
+            <button class="selector-btn active" data-game="big_lotto">
+                <span class="game-icon">🎰</span>
+                <div class="selector-text">
+                    <span class="game-name">大樂透</span>
+                    <span class="game-desc">6/49 + 特別號</span>
+                </div>
+            </button>
+            <button class="selector-btn" data-game="super_lotto">
+                <span class="game-icon">⚡</span>
+                <div class="selector-text">
+                    <span class="game-name">威力彩</span>
+                    <span class="game-desc">6/38 + 1/8</span>
+                </div>
+            </button>
+            <button class="selector-btn" data-game="daily_cash_539">
+                <span class="game-icon">📅</span>
+                <div class="selector-text">
+                    <span class="game-name">今彩539</span>
+                    <span class="game-desc">5/39</span>
+                </div>
+            </button>
+        </div>
+
+        <!-- 主統計面板 -->
+        <div class="stats-panel-grid">
+            <!-- 最新開獎卡片 (含 3D 漸層號碼球) -->
+            <div class="glass-card latest-draw-card">
+                <div class="card-header">
+                    <h3>最新一期開獎結果</h3>
+                    <span id="latestDrawNo" class="draw-badge">期數: 載入中...</span>
+                </div>
+                <div class="draw-date-container">
+                    開獎日期: <span id="latestDrawDate">--</span>
+                </div>
+                <div class="balls-container" id="latestBalls">
+                    <div class="loading-spinner"></div>
+                </div>
+            </div>
+
+            <!-- 冷熱門號碼 -->
+            <div class="glass-card hot-cold-card">
+                <h3>🔥 熱門與冷門號碼 (Top 5)</h3>
+                <div class="hot-cold-split">
+                    <div class="hot-side">
+                        <span class="sub-label">🔥 最常開出</span>
+                        <div class="badge-row" id="hotNumbers">
+                            <!-- Javascript 動態填入 -->
+                        </div>
+                    </div>
+                    <div class="cold-side">
+                        <span class="sub-label">❄️ 最少開出</span>
+                        <div class="badge-row" id="coldNumbers">
+                            <!-- Javascript 動態填入 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 進階數值分析指標 -->
+            <div class="glass-card indicator-card">
+                <h3>📈 進階機率分析</h3>
+                <div class="indicators-grid">
+                    <div class="indicator-item">
+                        <span class="indicator-label">奇偶數分布比例</span>
+                        <div class="odd-even-bar-wrapper">
+                            <div class="odd-even-bar" id="oddEvenBar">
+                                <div class="odd-part" style="width: 50%;">50%</div>
+                                <div class="even-part" style="width: 50%;">50%</div>
+                            </div>
+                        </div>
+                        <span class="indicator-val-sub" id="oddEvenRatioText">載入中...</span>
+                    </div>
+                    <div class="indicator-item">
+                        <span class="indicator-label">平均號碼總和</span>
+                        <span class="indicator-value" id="avgSumVal">--</span>
+                        <span class="indicator-val-sub" id="avgExpectationText">理論期望均值附近</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 開出頻率圖表 -->
+        <div class="glass-card chart-card">
+            <div class="chart-header">
+                <h3>📊 歷史號碼開出次數頻率圖</h3>
+                <span class="text-muted">統計歷屆所有開獎數據</span>
+            </div>
+            <div class="chart-container">
+                <canvas id="frequencyChart"></canvas>
+            </div>
+        </div>
+
+        <!-- 歷史開獎表格 -->
+        <div class="glass-card history-table-card">
+            <div class="table-header">
+                <h3>📜 歷屆開獎結果 (最近 50 期)</h3>
+            </div>
+            <div class="table-wrapper">
+                <table class="history-table">
+                    <thead>
+                        <tr id="tableHeaderRow">
+                            <th>期數</th>
+                            <th>開獎日期</th>
+                            <th>開出號碼</th>
+                            <th>特別號</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody">
+                        <!-- Javascript 動態渲染 -->
+                    </tbody>
+                </table>
             </div>
         </div>
     </section>
