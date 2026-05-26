@@ -1,0 +1,199 @@
+/* 運彩分析系統 - 全局頂級高質感樣式檔 (style.css) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+    --bg-gradient: linear-gradient(135deg, #0b0f19 0%, #111827 50%, #1e1b4b 100%);
+    --card-bg: rgba(255, 255, 255, 0.03);
+    --card-border: rgba(255, 255, 255, 0.08);
+    --card-hover-bg: rgba(255, 255, 255, 0.06);
+    --card-hover-border: rgba(255, 255, 255, 0.18);
+    
+    /* 絢麗功能配色 */
+    --lotto-glow: 0 0 20px rgba(245, 158, 11, 0.25);
+    --lotto-border: rgba(245, 158, 11, 0.5);
+    --marksix-glow: 0 0 20px rgba(16, 185, 129, 0.25);
+    --marksix-border: rgba(16, 185, 129, 0.5);
+    --cash539-glow: 0 0 20px rgba(236, 72, 153, 0.25);
+    --cash539-border: rgba(236, 72, 153, 0.5);
+}
+
+body {
+    background: var(--bg-gradient);
+    font-family: 'Inter', 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: #f3f4f6;
+    min-height: 100vh;
+    padding-bottom: 60px;
+    background-attachment: fixed;
+}
+
+/* 玻璃擬態基礎樣式 */
+.glass-panel {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 20px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-panel:hover {
+    background: var(--card-hover-bg);
+    border-color: var(--card-hover-border);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* 全局毛玻璃導覽列 */
+.navbar-glass {
+    background: rgba(11, 15, 25, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 15px 0;
+}
+
+.navbar-brand-premium {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    letter-spacing: 1px;
+    background: linear-gradient(to right, #6366f1, #a855f7, #ec4899);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 1.5rem;
+}
+
+/* F-03 彩券種類精美切換卡片 */
+.card-game {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(10px);
+    border-radius: 18px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+}
+
+.card-game::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(800px circle at var(--x, 0) var(--y, 0), rgba(255,255,255,0.06), transparent 40%);
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+.card-game:hover::before {
+    opacity: 1;
+}
+
+.card-game:hover {
+    transform: translateY(-5px);
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* 啟動狀態的發光特效 */
+.active-lotto {
+    border: 1.5px solid #f59e0b;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+    box-shadow: var(--lotto-glow);
+}
+.active-mark_six {
+    border: 1.5px solid #10b981;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+    box-shadow: var(--marksix-glow);
+}
+.active-daily_cash_539 {
+    border: 1.5px solid #ec4899;
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+    box-shadow: var(--cash539-glow);
+}
+
+.game-icon {
+    font-size: 1.8rem;
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    transition: all 0.3s;
+}
+
+.card-game:hover .game-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+/* 精美開獎球體 */
+.ball-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.ball {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #ffffff;
+    box-shadow: inset -3px -3px 8px rgba(0, 0, 0, 0.3), 3px 3px 10px rgba(0, 0, 0, 0.2);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+.ball-lotto { background: radial-gradient(circle at 30% 30%, #f59e0b, #d97706); }
+.ball-marksix { background: radial-gradient(circle at 30% 30%, #10b981, #059669); }
+.ball-cash539 { background: radial-gradient(circle at 30% 30%, #ec4899, #db2777); }
+
+.ball-special {
+    background: radial-gradient(circle at 30% 30%, #a855f7, #7c3aed) !important;
+    border: 2px solid #ffffff;
+}
+
+/* 精緻數據分析列表 */
+.stats-badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* 微動畫定義 */
+@keyframes popIn {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.hover-glow {
+    transition: all 0.3s;
+}
+.hover-glow:hover {
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+    transform: scale(1.02);
+}
+
+/* 微調開獎歷史表格 */
+.table-premium {
+    color: #e5e7eb;
+}
+.table-premium th {
+    border-bottom: 2px solid rgba(255, 255, 255, 0.08) !important;
+    font-weight: 600;
+    color: #9ca3af;
+}
+.table-premium td {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
+    vertical-align: middle;
+}
