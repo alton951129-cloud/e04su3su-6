@@ -326,3 +326,510 @@ footer {
         display: none;
     }
 }
+
+/* ==========================================================================
+   數據統計分析中心 (F-01 / F-03) 樣式
+   ========================================================================== */
+
+.analysis-center {
+    padding: 6rem 5% 4rem 5%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* 彩券種類選擇器 */
+.game-selector-container {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 3.5rem;
+    flex-wrap: wrap;
+}
+
+.selector-btn {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    padding: 1rem 2rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    text-align: left;
+}
+
+.selector-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.selector-btn .game-icon {
+    font-size: 2.2rem;
+    transition: transform 0.3s ease;
+}
+
+.selector-btn:hover .game-icon {
+    transform: scale(1.15) rotate(5deg);
+}
+
+.selector-btn .selector-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.selector-btn .game-name {
+    font-weight: 800;
+    font-size: 1.15rem;
+    color: var(--text-main);
+    margin-bottom: 0.15rem;
+}
+
+.selector-btn .game-desc {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* 激活狀態樣式 */
+.selector-btn.active {
+    color: var(--text-main);
+}
+
+.selector-btn.active[data-game="big_lotto"] {
+    background: rgba(59, 130, 246, 0.15);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 25px var(--primary-glow);
+}
+
+.selector-btn.active[data-game="super_lotto"] {
+    background: rgba(16, 185, 129, 0.15);
+    border-color: var(--accent-color);
+    box-shadow: 0 0 25px var(--accent-glow);
+}
+
+.selector-btn.active[data-game="daily_cash_539"] {
+    background: rgba(251, 191, 36, 0.15);
+    border-color: var(--gold-color);
+    box-shadow: 0 0 25px rgba(251, 191, 36, 0.3);
+}
+
+/* 主面板網格 */
+.stats-panel-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.stats-panel-grid .glass-card {
+    padding: 2.2rem;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.stats-panel-grid h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+    border-left: 4px solid var(--primary-color);
+    padding-left: 0.75rem;
+}
+
+/* 為了區分彩券種類的側邊框 */
+.stats-panel-grid[data-game="super_lotto"] h3 {
+    border-left-color: var(--accent-color);
+}
+.stats-panel-grid[data-game="daily_cash_539"] h3 {
+    border-left-color: var(--gold-color);
+}
+
+/* 1. 最新開獎卡片 */
+.latest-draw-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.latest-draw-card h3 {
+    margin-bottom: 0;
+}
+
+.draw-badge {
+    padding: 0.3rem 0.8rem;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--glass-border);
+    border-radius: 99px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--gold-color);
+}
+
+.draw-date-container {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+}
+
+.balls-container {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    align-items: center;
+    min-height: 55px;
+    padding: 0.5rem 0;
+}
+
+/* 經典 3D 球體設計 */
+.ball {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 1.3rem;
+    color: white;
+    position: relative;
+    box-shadow: 
+        0 8px 20px rgba(0, 0, 0, 0.4), 
+        inset -5px -5px 12px rgba(0, 0, 0, 0.5), 
+        inset 5px 5px 12px rgba(255, 255, 255, 0.45);
+    text-shadow: 1px 2px 3px rgba(0, 0, 0, 0.7);
+    animation: ballBounce 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+@keyframes ballBounce {
+    0% { transform: scale(0.3) translateY(40px); opacity: 0; }
+    60% { transform: scale(1.1) translateY(-10px); }
+    80% { transform: scale(0.95) translateY(2px); }
+    100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+/* 不同球號的漸層設定 */
+.ball-lotto-normal {
+    background: radial-gradient(circle at 35% 35%, #93c5fd 0%, #3b82f6 60%, #1e3a8a 100%);
+}
+
+.ball-super-normal {
+    background: radial-gradient(circle at 35% 35%, #6ee7b7 0%, #10b981 60%, #064e3b 100%);
+}
+
+.ball-539-normal {
+    background: radial-gradient(circle at 35% 35%, #fde047 0%, #fbbf24 60%, #78350f 100%);
+    color: #451a03;
+    text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.5);
+    box-shadow: 
+        0 8px 20px rgba(0, 0, 0, 0.4), 
+        inset -5px -5px 12px rgba(0, 0, 0, 0.5), 
+        inset 5px 5px 12px rgba(255, 255, 255, 0.7);
+}
+
+.ball-special {
+    background: radial-gradient(circle at 35% 35%, #fca5a5 0%, #ef4444 60%, #7f1d1d 100%);
+    box-shadow: 
+        0 8px 25px rgba(239, 68, 68, 0.45), 
+        inset -5px -5px 12px rgba(0, 0, 0, 0.5), 
+        inset 5px 5px 12px rgba(255, 255, 255, 0.5);
+}
+
+.ball-special-badge {
+    font-size: 0.7rem;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 0.1rem 0.3rem;
+    border-radius: 4px;
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    color: var(--gold-color);
+}
+
+/* 2. 熱門冷門球 */
+.hot-cold-split {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    flex-grow: 1;
+    justify-content: center;
+}
+
+.hot-cold-split .sub-label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-bottom: 0.6rem;
+    display: block;
+}
+
+.badge-row {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+
+.num-badge {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1rem;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    transition: transform 0.3s ease;
+}
+
+.num-badge:hover {
+    transform: scale(1.15) rotate(5deg);
+}
+
+.num-badge.hot {
+    background: linear-gradient(135deg, #f87171, #ef4444);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35);
+}
+
+.num-badge.cold {
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
+}
+
+/* 3. 進階機率卡片 */
+.indicators-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    flex-grow: 1;
+    justify-content: center;
+}
+
+.indicator-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.indicator-label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-bottom: 0.6rem;
+}
+
+.odd-even-bar-wrapper {
+    height: 24px;
+    border-radius: 99px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    margin-bottom: 0.4rem;
+}
+
+.odd-even-bar {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    font-size: 0.75rem;
+    font-weight: 900;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+.odd-part {
+    background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: width 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.even-part {
+    background: linear-gradient(90deg, #10b981, #047857);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: width 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.indicator-value {
+    font-size: 2.8rem;
+    font-weight: 900;
+    color: var(--gold-color);
+    text-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
+    line-height: 1.1;
+    margin-bottom: 0.2rem;
+}
+
+.indicator-val-sub {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* 圖表卡片 */
+.chart-card {
+    padding: 2.2rem;
+    margin-bottom: 2rem;
+}
+
+.chart-card h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.chart-container {
+    position: relative;
+    height: 380px;
+    width: 100%;
+}
+
+/* 歷屆開獎表格 */
+.history-table-card {
+    padding: 2.2rem;
+}
+
+.table-header {
+    margin-bottom: 1.5rem;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    max-height: 420px;
+    overflow-y: auto;
+    border-radius: 12px;
+    border: 1px solid var(--glass-border);
+}
+
+/* 自訂捲軸樣式，更有科技感 */
+.table-wrapper::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+.table-wrapper::-webkit-scrollbar-track {
+    background: rgba(2, 6, 23, 0.3);
+}
+.table-wrapper::-webkit-scrollbar-thumb {
+    background: var(--glass-border);
+    border-radius: 3px;
+}
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.history-table th {
+    padding: 1.1rem 1.2rem;
+    background: rgba(15, 23, 42, 0.95);
+    font-weight: 700;
+    color: var(--text-main);
+    border-bottom: 2px solid var(--glass-border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    backdrop-filter: blur(8px);
+}
+
+.history-table td {
+    padding: 0.95rem 1.2rem;
+    border-bottom: 1px solid var(--glass-border);
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    vertical-align: middle;
+}
+
+.history-table tbody tr {
+    transition: all 0.25s ease;
+}
+
+.history-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-main);
+}
+
+.history-table tbody tr:hover td {
+    color: var(--text-main);
+}
+
+/* 表格內的小號碼球 */
+.table-ball {
+    width: 32px;
+    height: 32px;
+    font-size: 0.95rem;
+    margin-right: 0.3rem;
+    box-shadow: 
+        0 4px 8px rgba(0, 0, 0, 0.3), 
+        inset -3px -3px 8px rgba(0, 0, 0, 0.4), 
+        inset 3px 3px 8px rgba(255, 255, 255, 0.4);
+    animation: none; /* 列表不用動畫，避免雜亂 */
+}
+
+/* 讀取動畫與錯誤提示 */
+.loading-spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    border-top-color: var(--primary-color);
+    animation: spin 1s linear infinite;
+    margin: 1rem auto;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.error-message {
+    color: #ef4444;
+    font-weight: 600;
+    text-align: center;
+    padding: 1rem;
+}
+
+/* 響應式微調 */
+@media (max-width: 768px) {
+    .selector-btn {
+        width: 100%;
+        justify-content: flex-start;
+    }
+    
+    .stats-panel-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .chart-container {
+        height: 280px;
+    }
+    
+    .history-table th, .history-table td {
+        padding: 0.8rem;
+        font-size: 0.85rem;
+    }
+    
+    .table-ball {
+        width: 26px;
+        height: 26px;
+        font-size: 0.8rem;
+        margin-right: 0.15rem;
+    }
+}
+
