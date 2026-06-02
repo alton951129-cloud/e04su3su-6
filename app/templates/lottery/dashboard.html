@@ -1,0 +1,254 @@
+{% extends "base.html" %}
+
+{% block title %}{{ current_game.name }}分析大盤{% endblock %}
+
+{% block content %}
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="p-4 glass-panel mb-4" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(168, 85, 247, 0.03) 100%);">
+            <h1 class="display-5 fw-bold text-white mb-2">🎯 {{ current_game.name }} · 數據大盤</h1>
+            <p class="text-white-50 mb-0">當前分析狀態已鎖定為 <span class="badge text-bg-warning px-3 py-2 rounded-pill fs-6">{{ current_game.name }}</span>。提供科學數據分析，協助您做出理性的理財決策。</p>
+        </div>
+    </div>
+</div>
+
+<!-- ==================================================== -->
+<!-- F-03: 彩券種類切換區域 (卡片清單) -->
+<!-- ==================================================== -->
+<div class="row mb-5">
+    <div class="col-12">
+        <h3 class="text-white-50 mb-3 fs-5"><i class="bi bi-shuffle me-2"></i>切換分析對象 (F-03)</h3>
+    </div>
+    
+    {% for game in all_games %}
+        <div class="col-md-4 mb-3">
+            <a href="{{ url_for('lottery.dashboard', game_code=game.game_code) }}" class="text-decoration-none text-light">
+                <div class="card card-game h-100 {% if game.game_code == current_game.game_code %}active-{{ game.game_code }}{% endif %}">
+                    <div class="card-body d-flex align-items-center justify-content-between p-4">
+                        <div class="d-flex align-items-center">
+                            <div class="game-icon me-3">
+                                {% if game.game_code == 'lotto' %}🎰
+                                {% elif game.game_code == 'mark_six' %}🎱
+                                {% else %}🎫{% endif %}
+                            </div>
+                            <div>
+                                <h4 class="card-title text-white mb-1 fw-bold">{{ game.name }}</h4>
+                                <p class="card-text text-white-50 small mb-0">1 ~ {{ game.max_number }} 號選 {{ game.pick_count }} 球</p>
+                            </div>
+                        </div>
+                        {% if game.game_code == current_game.game_code %}
+                            <span class="badge rounded-pill bg-success px-3 py-2"><i class="bi bi-activity me-1"></i>分析中</span>
+                        {% else %}
+                            <span class="text-white-50 small"><i class="bi bi-chevron-right"></i></span>
+                        {% endif %}
+                    </div>
+                </div>
+            </a>
+        </div>
+    {% endfor %}
+</div>
+
+<div class="row">
+    <!-- ==================================================== -->
+    <!-- F-01: 最近 10 期歷史開獎號碼 (左側) -->
+    <!-- ==================================================== -->
+    <div class="col-lg-6 mb-5">
+        <div class="glass-panel p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3 border-secondary">
+                <h3 class="fs-4 fw-bold text-white mb-0"><i class="bi bi-calendar3 me-2 text-warning"></i>歷史開獎紀錄 (F-01)</h3>
+                <span class="badge bg-secondary-subtle text-secondary-emphasis px-3 py-2 rounded-pill">最近 10 期</span>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table table-premium align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width: 25%">期數</th>
+                            <th scope="col" style="width: 25%">開獎日期</th>
+                            <th scope="col" style="width: 50%">開出號碼</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if history %}
+                            {% for draw in history %}
+                                <tr>
+                                    <td class="fw-bold text-info">{{ draw.draw_period }}</td>
+                                    <td class="text-white-50 small">{{ draw.draw_date }}</td>
+                                    <td>
+                                        <div class="ball-container">
+                                            <!-- 正碼球體 -->
+                                            {% for num in draw.winning_numbers.split(',') %}
+                                                <span class="ball ball-{{ current_game.game_code }}">{{ num }}</span>
+                                            {% endfor %}
+                                            
+                                            <!-- 特別號球體 (若有) -->
+                                            {% if current_game.has_special and draw.special_number %}
+                                                <span class="ball ball-special" title="特別號">{{ "%02d"|format(draw.special_number) }}</span>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="3" class="text-center text-white-50 py-5">
+                                    <i class="bi bi-database-exclamation fs-1 d-block mb-3"></i>無歷史開獎數據。
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================================================== -->
+    <!-- F-01 & F-02: 頻率統計與號碼預測 (右側) -->
+    <!-- ==================================================== -->
+    <div class="col-lg-6 mb-5">
+        <div class="d-flex flex-column gap-4 h-100">
+            <!-- 數據分析卡片 (F-01) -->
+            <div class="glass-panel p-4 flex-fill">
+                <h3 class="fs-4 fw-bold text-white mb-4 border-bottom pb-3 border-secondary"><i class="bi bi-pie-chart me-2 text-success"></i>冷熱號碼分析 (F-01)</h3>
+                
+                <div class="mb-4">
+                    <h5 class="text-white-50 fs-6 mb-2">🔥 熱門號碼 (出現次數最高)</h5>
+                    <div class="ball-container">
+                        {% if stats.hot %}
+                            {% for num in stats.hot %}
+                                <span class="ball ball-{{ current_game.game_code }}">{{ "%02d"|format(num) }}</span>
+                            {% endfor %}
+                        {% else %}
+                            <span class="text-white-50 small">暫無數據</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <h5 class="text-white-50 fs-6 mb-2">❄️ 冷門號碼 (最久未開或次數最低)</h5>
+                    <div class="ball-container">
+                        {% if stats.cold %}
+                            {% for num in stats.cold %}
+                                <span class="ball bg-dark border border-secondary text-secondary-emphasis">{{ "%02d"|format(num) }}</span>
+                            {% endfor %}
+                        {% else %}
+                            <span class="text-white-50 small">暫無數據</span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="p-3 rounded-3" style="background: rgba(255, 255, 255, 0.02); border: 1px dashed rgba(255, 255, 255, 0.1);">
+                    <p class="small text-white-50 mb-0"><i class="bi bi-info-circle me-1"></i><strong>統計學心法：</strong>熱門號碼代表近期機率加權，冷門號碼則具備概率補償潛力。交叉搭配投注是科學選號的上策。</p>
+                </div>
+            </div>
+
+            <!-- 號碼生成卡片 (F-02 互動展示區) -->
+            <div class="glass-panel p-4 flex-fill">
+                <h3 class="fs-4 fw-bold text-white mb-3 border-bottom pb-3 border-secondary"><i class="bi bi-cpu me-2 text-info"></i>智能幸運選號 (F-02)</h3>
+                <p class="text-white-50 small">基於熱門加權概率演算法，為您生成最有可能開出的 {{ current_game.pick_count }} 個數字組合。</p>
+                
+                <div class="my-4 py-4 text-center rounded-4" style="background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.05);">
+                    <!-- 預測球體動態載入區 -->
+                    <div id="prediction-balls" class="d-flex justify-content-center gap-3 flex-wrap min-height-ball mb-3">
+                        <span class="text-white-50 small italic py-2">點擊下方按鈕，智能大腦正在待命...</span>
+                    </div>
+                </div>
+
+                <div class="d-grid">
+                    <button type="button" id="btn-generate" class="btn btn-primary btn-lg rounded-pill hover-glow border-0" style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);">
+                        <i class="bi bi-magic me-2"></i>一鍵生成幸運號碼 (F-02)
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // F-02: 一鍵生成預測號碼的前端互動特效 (超酷炫 wow-factor)
+    document.getElementById('btn-generate').addEventListener('click', function() {
+        const container = document.getElementById('prediction-balls');
+        container.innerHTML = '<div class="spinner-border text-info my-2" role="status"><span class="visually-hidden">Loading...</span></div>';
+        
+        // 模擬伺服器端智能計算延遲 (0.8 秒)
+        setTimeout(() => {
+            container.innerHTML = '';
+            
+            // 從後端傳入的參數中獲取規則
+            const pickCount = {{ current_game.pick_count }};
+            const maxNumber = {{ current_game.max_number }};
+            const hasSpecial = {{ current_game.has_special }};
+            const gameCode = "{{ current_game.game_code }}";
+
+            // 1. 生成不重複的正碼
+            let numbers = [];
+            
+            // 為了提升體驗，將熱門號碼注入作為概率加權
+            const hotNumbers = [{% if stats.hot %}{% for n in stats.hot %}{{ n }},{% endfor %}{% endif %}];
+            
+            while (numbers.length < pickCount) {
+                let candidate;
+                // 70% 機率從熱門號碼中選，30% 機率完全隨機
+                if (hotNumbers.length > 0 && Math.random() < 0.7) {
+                    candidate = hotNumbers[Math.floor(Math.random() * hotNumbers.length)];
+                } else {
+                    candidate = Math.floor(Math.random() * maxNumber) + 1;
+                }
+                
+                if (!numbers.includes(candidate)) {
+                    numbers.push(candidate);
+                }
+            }
+
+            // 排序正碼，視覺上更乾淨
+            numbers.sort((a, b) => a - b);
+
+            // 2. 渲染正碼
+            numbers.forEach(num => {
+                const formattedNum = String(num).padStart(2, '0');
+                const ball = document.createElement('span');
+                ball.className = `ball ball-${gameCode}`;
+                ball.innerText = formattedNum;
+                container.appendChild(ball);
+            });
+
+            // 3. 生成特別號 (若有)
+            if (hasSpecial) {
+                const specNum = Math.floor(Math.random() * 49) + 1;
+                const formattedSpec = String(specNum).padStart(2, '0');
+                const specBall = document.createElement('span');
+                specBall.className = `ball ball-special`;
+                specBall.title = "特別號";
+                specBall.innerText = formattedSpec;
+                
+                // 加入分隔符號
+                const divider = document.createElement('span');
+                divider.className = 'text-white-50 fs-4 mx-1 align-self-center';
+                divider.innerHTML = '+';
+                
+                container.appendChild(divider);
+                container.appendChild(specBall);
+            }
+            
+            // 播放一聲輕微提示 (若瀏覽器支持)
+            try {
+                const context = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = context.createOscillator();
+                const gain = context.createGain();
+                osc.connect(gain);
+                gain.connect(context.destination);
+                osc.frequency.setValueAtTime(587.33, context.currentTime); // D5 階音，明亮好聽
+                gain.gain.setValueAtTime(0.08, context.currentTime);
+                osc.start();
+                gain.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.15);
+                osc.stop(context.currentTime + 0.15);
+            } catch (e) {
+                // 忽略音效失效
+            }
+
+        }, 800);
+    });
+</script>
+{% endblock %}

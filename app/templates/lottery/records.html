@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+
+{% block title %}個人投注記帳{% endblock %}
+
+{% block content %}
+<!-- F-04: 頂部財務數據分析大盤 -->
+<div class="row mb-4">
+    <div class="col-12">
+        {% if stats.net >= 0 %}
+            <div class="p-4 glass-panel text-white position-relative overflow-hidden shadow-lg border-success" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(20, 184, 166, 0.05) 100%); border-width: 1.5px;">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <span class="badge text-bg-success px-3 py-2 rounded-pill fs-6 mb-2"><i class="bi bi-graph-up me-1"></i>當前處於盈餘狀態</span>
+                        <h2 class="display-6 fw-bold mb-1 text-white">💰 財務淨損益分析</h2>
+                        <p class="text-white-50 mb-0">勝券在握！持續使用科學分析提高勝率，並記得理性控制花費喔！</p>
+                    </div>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                        <span class="display-4 fw-extrabold text-success" style="font-family: 'Outfit', sans-serif;">+${{ "{:,}".format(stats.net) }}</span>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="p-4 glass-panel text-white position-relative overflow-hidden shadow-lg {% if stats.net <= -5000 %}border-danger{% else %}border-warning{% endif %}" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.12) 0%, rgba(244, 63, 94, 0.04) 100%); border-width: 1.5px;">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        {% if stats.net <= -5000 %}
+                            <span class="badge text-bg-danger px-3 py-2 rounded-pill fs-6 mb-2"><i class="bi bi-exclamation-octagon-fill me-1"></i>虧損高能警報</span>
+                        {% else %}
+                            <span class="badge text-bg-warning text-dark px-3 py-2 rounded-pill fs-6 mb-2"><i class="bi bi-exclamation-triangle-fill me-1"></i>當前處於虧損狀態</span>
+                        {% endif %}
+                        <h2 class="display-6 fw-bold mb-1 text-white">📉 財務淨損益分析</h2>
+                        <p class="text-white-50 mb-0">目前為虧損狀態。科學統計提醒您：調整投注策略，切忌盲目追加投注！</p>
+                    </div>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                        <span class="display-4 fw-extrabold text-danger" style="font-family: 'Outfit', sans-serif;">-${{ "{:,}".format(stats.net|abs) }}</span>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- F-04: 虧損累計防沉迷提醒區 -->
+{% if stats.net <= -5000 %}
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="alert alert-danger glass-panel text-white border-0 shadow-lg p-4 mb-0" style="background: linear-gradient(135deg, rgba(220, 38, 38, 0.3) 0%, rgba(127, 29, 29, 0.2) 100%); border: 1.5px solid rgba(220, 38, 38, 0.5) !important;">
+                <div class="d-flex align-items-start">
+                    <div class="rounded-circle bg-danger d-flex align-items-center justify-content-center p-3 me-3" style="width: 50px; height: 50px; flex-shrink: 0;">
+                        <i class="bi bi-chat-square-quote-fill fs-3 text-white animate-pulse"></i>
+                    </div>
+                    <div>
+                        <h4 class="alert-heading fw-bold text-white mb-2"><i class="bi bi-heart-pulse-fill me-2"></i>防過度沉迷溫馨提示 (F-04)</h4>
+                        <p class="mb-0 fs-5 lh-base text-light">「您已累計虧損達到或超過 **$5,000 元**！小賭怡情，大賭傷身，理性控制投注以防發財夢碎！建議您調整心態或暫停投注。」</p>
+                        <hr class="border-light opacity-20 my-3">
+                        <span class="small text-white-50"><i class="bi bi-info-circle me-1"></i>本系統之初衷為提供科學數據分析並協助控制預算，提醒您注意防範過度投機。</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<!-- 財務四大核心指標看板 -->
+<div class="row mb-5">
+    <div class="col-sm-6 col-lg-3 mb-3">
+        <div class="glass-panel p-4 h-100 text-center">
+            <p class="text-white-50 small mb-1"><i class="bi bi-cash-stack text-warning me-1"></i>累計投注花費</p>
+            <h3 class="fw-bold text-warning" style="font-family: 'Outfit', sans-serif;">${{ "{:,}".format(stats.cost) }}</h3>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3 mb-3">
+        <div class="glass-panel p-4 h-100 text-center">
+            <p class="text-white-50 small mb-1"><i class="bi bi-trophy text-info me-1"></i>累計中獎金額</p>
+            <h3 class="fw-bold text-info" style="font-family: 'Outfit', sans-serif;">${{ "{:,}".format(stats.prize) }}</h3>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3 mb-3">
+        <div class="glass-panel p-4 h-100 text-center">
+            <p class="text-white-50 small mb-1"><i class="bi bi-calculator text-success me-1"></i>淨盈虧</p>
+            <h3 class="fw-bold {% if stats.net >= 0 %}text-success{% else %}text-danger{% endif %}" style="font-family: 'Outfit', sans-serif;">
+                {% if stats.net >= 0 %}+{% endif %}${{ "{:,}".format(stats.net) }}
+            </h3>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3 mb-3">
+        <div class="glass-panel p-4 h-100 text-center">
+            <p class="text-white-50 small mb-1"><i class="bi bi-percent text-primary me-1"></i>投資報酬率 (ROI)</p>
+            <h3 class="fw-bold text-primary" style="font-family: 'Outfit', sans-serif;">{{ "{:.2f}".format(stats.roi) }}%</h3>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- 左側：新增投注紀錄表單 (F-04) -->
+    <div class="col-lg-4 mb-5">
+        <div class="glass-panel p-4 h-100">
+            <h3 class="fs-4 fw-bold text-white mb-4 border-bottom pb-3 border-secondary"><i class="bi bi-plus-circle-dotted text-success me-2"></i>新增投注紀錄 (F-04)</h3>
+            
+            <form action="{{ url_for('record.add_record') }}" method="POST">
+                <div class="mb-3">
+                    <label for="game_code" class="form-label text-white-50 small">彩券種類</label>
+                    <select class="form-select bg-dark text-white border-secondary rounded-3" id="game_code" name="game_code" required style="background-color: rgba(0,0,0,0.2) !important;">
+                        {% for game in all_games %}
+                            <option value="{{ game.game_code }}" {% if game.game_code == 'lotto' %}selected{% endif %}>{{ game.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="cost" class="form-label text-white-50 small">投注花費 (元)</label>
+                    <input type="number" class="form-control bg-dark text-white border-secondary rounded-3" id="cost" name="cost" placeholder="必須大於 0" required min="1" style="background-color: rgba(0,0,0,0.2) !important;">
+                </div>
+                
+                <div class="mb-3">
+                    <label for="prize" class="form-label text-white-50 small">中獎金額 (元)</label>
+                    <input type="number" class="form-control bg-dark text-white border-secondary rounded-3" id="prize" name="prize" placeholder="若無中獎請填 0" required min="0" style="background-color: rgba(0,0,0,0.2) !important;">
+                </div>
+                
+                <div class="mb-4">
+                    <label for="record_date" class="form-label text-white-50 small">投注日期</label>
+                    <input type="date" class="form-control bg-dark text-white border-secondary rounded-3" id="record_date" name="record_date" value="{{ today_date }}" required style="background-color: rgba(0,0,0,0.2) !important;">
+                </div>
+                
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-success btn-lg rounded-pill hover-glow border-0" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                        <i class="bi bi-check-circle me-1"></i>提交記帳紀錄
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- 右側：歷史記帳明細明細 (F-04) -->
+    <div class="col-lg-8 mb-5">
+        <div class="glass-panel p-4 h-100">
+            <h3 class="fs-4 fw-bold text-white mb-4 border-bottom pb-3 border-secondary"><i class="bi bi-list-stars text-info me-2"></i>歷史投注明細 (F-04)</h3>
+            
+            <div class="table-responsive">
+                <table class="table table-premium align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width: 15%">日期</th>
+                            <th scope="col" style="width: 20%">彩券種類</th>
+                            <th scope="col" style="width: 15%">投注花費</th>
+                            <th scope="col" style="width: 15%">中獎金額</th>
+                            <th scope="col" style="width: 15%">淨損益</th>
+                            <th scope="col" style="width: 20%">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if records %}
+                            {% for rec in records %}
+                                <tr>
+                                    <td class="text-white-50 small">{{ rec.record_date }}</td>
+                                    <td class="fw-bold">
+                                        <span class="badge {% if rec.game_code == 'lotto' %}text-bg-warning{% elif rec.game_code == 'mark_six' %}text-bg-success{% else %}text-bg-danger{% endif %} rounded-pill px-2.5 py-1.5">
+                                            {{ rec.game_name }}
+                                        </span>
+                                    </td>
+                                    <td class="text-warning fw-semibold">${{ "{:,}".format(rec.cost) }}</td>
+                                    <td class="text-info fw-semibold">${{ "{:,}".format(rec.prize) }}</td>
+                                    <td>
+                                        {% set net_single = rec.prize - rec.cost %}
+                                        <span class="fw-bold {% if net_single >= 0 %}text-success{% else %}text-danger{% endif %}">
+                                            {% if net_single >= 0 %}+{% endif %}${{ "{:,}".format(net_single) }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <form action="{{ url_for('record.delete_record', id=rec.id) }}" method="POST" onsubmit="return confirm('確定要刪除這筆投注紀錄嗎？這將無法復原。');" style="display:inline;">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3">
+                                                <i class="bi bi-trash3 me-1"></i>刪除
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center text-white-50 py-5">
+                                    <i class="bi bi-wallet2 fs-1 d-block mb-3 text-secondary"></i>尚無任何投注記帳數據，快在左側新增第一筆吧！
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
