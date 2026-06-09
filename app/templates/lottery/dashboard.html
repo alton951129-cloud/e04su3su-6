@@ -6,8 +6,17 @@
 <div class="row mb-5">
     <div class="col-12">
         <div class="p-4 glass-panel mb-4" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(168, 85, 247, 0.03) 100%);">
-            <h1 class="display-5 fw-bold text-white mb-2">🎯 {{ current_game.name }} · 數據大盤</h1>
-            <p class="text-white-50 mb-0">當前分析狀態已鎖定為 <span class="badge text-bg-warning px-3 py-2 rounded-pill fs-6">{{ current_game.name }}</span>。提供科學數據分析，協助您做出理性的理財決策。</p>
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <div>
+                    <h1 class="display-5 fw-bold text-white mb-2">🎯 {{ current_game.name }} · 數據大盤</h1>
+                    <p class="text-white-50 mb-0">當前分析狀態已鎖定為 <span class="badge text-bg-warning px-3 py-2 rounded-pill fs-6">{{ current_game.name }}</span>。提供科學數據分析，協助您做出理性的理財決策。</p>
+                </div>
+                <div>
+                    <button type="button" id="btn-sync-data" class="btn btn-warning rounded-pill px-4 py-2 fw-bold hover-glow border-0" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #1e1b4b;">
+                        <i class="bi bi-arrow-repeat me-1"></i>同步最新開獎號碼
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -249,6 +258,43 @@
             }
 
         }, 800);
+    });
+
+    // 同步資料庫最新開獎號碼 (AJAX POST)
+    document.getElementById('btn-sync-data').addEventListener('click', function() {
+        const btn = this;
+        const originalHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>正在同步中...';
+        
+        fetch('/lottery/sync', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const added = data.counts;
+                const lotto = added.lotto || 0;
+                const daily = added.daily_cash_539 || 0;
+                const mark = added.mark_six || 0;
+                
+                alert(`同步成功！\n新增了大樂透：${lotto} 筆\n今彩539：${daily} 筆\n六合彩：${mark} 筆`);
+                window.location.reload();
+            } else {
+                alert('同步失敗：' + (data.message || '未知錯誤'));
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('發生連線錯誤，請稍後再試！');
+            btn.disabled = false;
+            btn.innerHTML = originalHtml;
+        });
     });
 </script>
 {% endblock %}

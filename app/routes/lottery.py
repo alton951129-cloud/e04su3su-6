@@ -1,9 +1,26 @@
-from flask import Blueprint, render_template, abort, redirect, url_for
+from flask import Blueprint, render_template, abort, redirect, url_for, jsonify, current_app
 from app.models.game import GameModel
 from app.models.history import HistoryModel
 
 # 建立 F-03 專屬的 Blueprint，命名為 lottery
 lottery_bp = Blueprint('lottery', __name__)
+
+@lottery_bp.route('/lottery/sync', methods=['POST'])
+def sync_data():
+    """同步最新的彩券開獎數據。"""
+    try:
+        from app.utils.crawler import sync_all_lotteries
+        added_counts = sync_all_lotteries()
+        return jsonify({
+            'success': True,
+            'counts': added_counts
+        })
+    except Exception as e:
+        current_app.logger.error(f"Sync failed: {e}")
+        return jsonify({
+            'success': False,
+            'message': str(e)
+        }), 500
 
 @lottery_bp.route('/lottery/<game_code>')
 def dashboard(game_code):
